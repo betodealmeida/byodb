@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "byodb"
+version = "0.1.0"
+description = "A personal database that powers privacy-respecting apps."
+authors = ["Beto Dealmeida <roberto@dealmeida.net>"]
+readme = "README.md"
+packages = [{include = "byodb", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+quart = "^0.19.3"
+quart-schema = "^0.18.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "byodb:run"
