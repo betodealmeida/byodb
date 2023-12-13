@@ -1,8 +1,7 @@
 import pytest
 from quart import Quart, testing
-from quart.ctx import AppContext
 
-from byodb import create_app
+from byodb.main import create_app, init_db
 
 
 @pytest.fixture
@@ -17,6 +16,7 @@ async def app(tmpdir) -> Quart:
             "SERVER_NAME": "byodb.net",
         }
     )
+    await init_db(app)
 
     yield app
 

@@ -62,8 +62,8 @@ class DatabaseUpdate:
     not allowed for consistency.
     """
 
-    name: str
-    description: str
+    name: str | None = None
+    description: str | None = None
 
 
 @dataclass
