@@ -120,16 +120,11 @@ async def get_databases() -> DatabasesResponse:
     """
     List all databases.
     """
-    result = []
     async with get_db() as db:
-        async with db.execute(
-            "SELECT uuid, dialect, name, description, created_at, last_modified_at "
-            "FROM database"
-        ) as cursor:
-            async for row in cursor:
-                result.append(Database.from_row(row))
+        async with db.execute("SELECT * FROM database") as cursor:
+            rows = await cursor.fetchall()
 
-    return DatabasesResponse(result=result)
+    return DatabasesResponse(result=[Database.from_row(row) for row in rows])
 
 
 @blueprint.route("/", methods=["POST"])
@@ -183,15 +178,14 @@ async def get_database(uuid: str) -> DatabaseResponse | FullErrorResponse:
     """
     async with get_db() as db:
         async with db.execute(
-            "SELECT uuid, dialect, name, description, created_at, last_modified_at "
-            "FROM database WHERE uuid = ?",
-            (uuid,),
+            "SELECT * FROM database WHERE uuid = ?", (uuid,)
         ) as cursor:
             row = await cursor.fetchone()
-            if row:
-                return DatabasesResponse(result=Database.from_row(row))
-
-    return get_database_not_found_error(uuid)
+            return (
+                DatabasesResponse(result=Database.from_row(row))
+                if row
+                else get_database_not_found_error(uuid)
+            )
 
 
 @blueprint.route("/<uuid>", methods=["PATCH"])
@@ -204,9 +198,7 @@ async def update_database(uuid: str, data: DatabaseUpdate) -> DatabaseResponse:
     """
     async with get_db() as db:
         async with db.execute(
-            "SELECT uuid, dialect, name, description, created_at, last_modified_at "
-            "FROM database WHERE uuid = ?",
-            (uuid,),
+            "SELECT * FROM database WHERE uuid = ?", (uuid,)
         ) as cursor:
             row = await cursor.fetchone()
             if not row:
