@@ -12,7 +12,7 @@ from importlib.metadata import version
 from quart import Quart
 from quart_schema import QuartSchema, validate_response
 
-from byodb.blueprints.databases import v1 as databases_v1
+from byodb.blueprints.databases.v1 import api as databases_v1
 
 app = Quart(__name__)
 app.register_blueprint(databases_v1.blueprint)
