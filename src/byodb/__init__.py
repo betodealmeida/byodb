@@ -21,6 +21,7 @@ QuartSchema(app)
 app.config.update(
     {
         "DATABASE": Path(app.root_path) / "byodb.sqlite",
+        "STORAGE": Path(app.root_path) / "storage",
     }
 )
 
