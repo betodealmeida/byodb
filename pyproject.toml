@@ -11,6 +11,7 @@ python = "^3.11"
 quart = "^0.19.3"
 quart-schema = "^0.18.0"
 aiosqlite = "^0.19.0"
+python-dotenv = "^1.0.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -19,3 +20,6 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.scripts]
 start = "byodb:run"
 init_db = "byodb:init_db_sync"
+
+[tool.flake8]
+max-line-length = 90

@@ -7,23 +7,19 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import aiosqlite
+from dotenv import dotenv_values
 from importlib.metadata import version
 from quart import Quart
 from quart_schema import QuartSchema, validate_response
 
-from byodb.blueprints import databases
+from byodb.blueprints.databases import v1 as databases_v1
 
 app = Quart(__name__)
-app.register_blueprint(databases.blueprint)
+app.register_blueprint(databases_v1.blueprint)
 
 QuartSchema(app)
 
-app.config.update(
-    {
-        "DATABASE": Path(app.root_path) / "byodb.sqlite",
-        "STORAGE": Path(app.root_path) / "storage",
-    }
-)
+app.config.update(dotenv_values(".env"))
 
 
 async def init_db() -> None:

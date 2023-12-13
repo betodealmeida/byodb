@@ -422,6 +422,20 @@ files = [
 ]
 
 [[package]]
+name = "python-dotenv"
+version = "1.0.0"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "python-dotenv-1.0.0.tar.gz", hash = "sha256:a8df96034aae6d2d50a4ebe8216326c61c3eb64836776504fcca410e5937a3ba"},
+    {file = "python_dotenv-1.0.0-py3-none-any.whl", hash = "sha256:f5971a9226b701070a4bf2c38c89e5a3f0d64de8debda981d1db98583009122a"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
+
+[[package]]
 name = "quart"
 version = "0.19.3"
 description = "A Python ASGI web microframework with the same API as Flask"
@@ -511,4 +525,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "875c6d1e7c5fa34f438b57ae318d50ea8f56cfec95945fa7c32a807cd027779f"
+content-hash = "21a3921bb057f5f8abd7e6583b53f9b78459f180cad9b2ffefaaf9f973e296d2"
