@@ -37,7 +37,7 @@ async def test_get_database_not_found_error(app: Quart) -> None:
         title="Database not found",
         status=404,
         detail='The database with uuid "some-uuid" does not exist.',
-        instance="https://byodb.net/api/v1/databases/some-uuid",
+        instance="https://byodb.net/api/databases/v1/some-uuid",
     )
     assert status_code == 404
     assert headers == ErrorHeaders(content_type="application/problem+json")

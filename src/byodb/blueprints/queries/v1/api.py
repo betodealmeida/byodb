@@ -14,7 +14,7 @@ from byodb.errors import ErrorResponse, ErrorHeaders
 
 from .models import Query, QueryCreate, QueryResponse, QueryResults
 
-blueprint = Blueprint("v1/queries", __name__, url_prefix="/api/v1/queries")
+blueprint = Blueprint("queries/v1", __name__, url_prefix="/api/queries/v1")
 
 
 @blueprint.route("/", methods=["POST"])
@@ -42,7 +42,7 @@ async def create_query(data: QueryCreate) -> tuple[QueryResponse, int]:
                 status=422,
                 detail=f'The database with uuid "{uuid}" does not exist.',
                 instance=url_for(
-                    "v1/databases.get_database",
+                    "databases/v1.get_database",
                     uuid=uuid,
                     _external=True,
                     _scheme="https",

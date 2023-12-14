@@ -25,7 +25,7 @@ from .models import (
 )
 from .utils import get_database_not_found_error, get_database_size
 
-blueprint = Blueprint("v1/databases", __name__, url_prefix="/api/v1/databases")
+blueprint = Blueprint("databases/v1", __name__, url_prefix="/api/databases/v1")
 
 
 @blueprint.route("/", methods=["GET"])
@@ -175,7 +175,7 @@ async def delete_database(
                     "deleted). This should never happen. I blame the goblins."
                 ),
                 instance=url_for(
-                    "v1/databases.delete_database",
+                    "databases/v1.delete_database",
                     uuid=uuid,
                     _external=True,
                 ),

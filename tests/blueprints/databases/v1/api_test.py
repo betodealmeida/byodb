@@ -20,14 +20,14 @@ async def test_get_databases(mocker: MockerFixture, app: Quart) -> None:
 
     test_client = app.test_client()
 
-    response = await test_client.get("/api/v1/databases/")
+    response = await test_client.get("/api/databases/v1/")
     assert response.status_code == 200
     payload = await response.json
     assert payload == {"result": []}
 
     with freeze_time("2023-01-01"):
         await test_client.post(
-            "/api/v1/databases/",
+            "/api/databases/v1/",
             json={
                 "dialect": "sqlite",
                 "name": "test_db",
@@ -35,7 +35,7 @@ async def test_get_databases(mocker: MockerFixture, app: Quart) -> None:
             },
         )
 
-    response = await test_client.get("/api/v1/databases/")
+    response = await test_client.get("/api/databases/v1/")
     assert response.status_code == 200
     payload = await response.json
     assert payload == {
@@ -66,7 +66,7 @@ async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
 
     with freeze_time("2023-01-01"):
         await test_client.post(
-            "/api/v1/databases/",
+            "/api/databases/v1/",
             json={
                 "dialect": "sqlite",
                 "name": "test_db",
@@ -75,7 +75,7 @@ async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
         )
 
     response = await test_client.get(
-        "/api/v1/databases/92cdeabd-8278-43ad-871d-0214dcb2d12e"
+        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e"
     )
     assert response.status_code == 200
     payload = await response.json
@@ -91,12 +91,12 @@ async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
         }
     }
 
-    response = await test_client.get("/api/v1/databases/invalid")
+    response = await test_client.get("/api/databases/v1/invalid")
     assert response.status_code == 404
     payload = await response.json
     assert payload == {
         "detail": 'The database with uuid "invalid" does not exist.',
-        "instance": "https://byodb.net/api/v1/databases/invalid",
+        "instance": "https://byodb.net/api/databases/v1/invalid",
         "status": 404,
         "title": "Database not found",
         "type": "https://byodb.net/errors/RFC7807/database-not-found",
@@ -116,7 +116,7 @@ async def test_create_database(mocker: MockerFixture, app: Quart) -> None:
 
     with freeze_time("2023-01-01"):
         response = await test_client.post(
-            "/api/v1/databases/",
+            "/api/databases/v1/",
             json={
                 "dialect": "sqlite",
                 "name": "test_db",
@@ -151,7 +151,7 @@ async def test_delete_database(mocker: MockerFixture, app: Quart) -> None:
 
     with freeze_time("2023-01-01"):
         await test_client.post(
-            "/api/v1/databases/",
+            "/api/databases/v1/",
             json={
                 "dialect": "sqlite",
                 "name": "test_db",
@@ -160,18 +160,18 @@ async def test_delete_database(mocker: MockerFixture, app: Quart) -> None:
         )
 
     response = await test_client.delete(
-        "/api/v1/databases/92cdeabd-8278-43ad-871d-0214dcb2d12e"
+        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e"
     )
     assert response.status_code == 204
     payload = await response.json
     assert payload == {"result": "OK"}
 
-    response = await test_client.delete("/api/v1/databases/invalid")
+    response = await test_client.delete("/api/databases/v1/invalid")
     assert response.status_code == 404
     payload = await response.json
     assert payload == {
         "detail": 'The database with uuid "invalid" does not exist.',
-        "instance": "https://byodb.net/api/v1/databases/invalid",
+        "instance": "https://byodb.net/api/databases/v1/invalid",
         "status": 404,
         "title": "Database not found",
         "type": "https://byodb.net/errors/RFC7807/database-not-found",
@@ -198,7 +198,7 @@ async def test_delete_database_multiple_primary_keys(
 
     test_client = app.test_client()
     response = await test_client.delete(
-        "/api/v1/databases/92cdeabd-8278-43ad-871d-0214dcb2d12e"
+        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e"
     )
     assert response.status_code == 500
     payload = await response.json
@@ -208,7 +208,7 @@ async def test_delete_database_multiple_primary_keys(
             "This should never happen. I blame the goblins."
         ),
         "instance": (
-            "http://byodb.net/api/v1/databases/92cdeabd-8278-43ad-871d-0214dcb2d12e"
+            "http://byodb.net/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e"
         ),
         "status": 500,
         "title": "Multiple primary keys found",
@@ -229,7 +229,7 @@ async def test_update_database(mocker: MockerFixture, app: Quart) -> None:
 
     with freeze_time("2023-01-01"):
         await test_client.post(
-            "/api/v1/databases/",
+            "/api/databases/v1/",
             json={
                 "dialect": "sqlite",
                 "name": "test_db",
@@ -239,7 +239,7 @@ async def test_update_database(mocker: MockerFixture, app: Quart) -> None:
 
     with freeze_time("2023-01-02"):
         response = await test_client.patch(
-            "/api/v1/databases/92cdeabd-8278-43ad-871d-0214dcb2d12e",
+            "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e",
             json={"name": "test"},
         )
     assert response.status_code == 200
@@ -257,14 +257,14 @@ async def test_update_database(mocker: MockerFixture, app: Quart) -> None:
     }
 
     response = await test_client.patch(
-        "/api/v1/databases/invalid",
+        "/api/databases/v1/invalid",
         json={"name": "test"},
     )
     assert response.status_code == 404
     payload = await response.json
     assert payload == {
         "detail": 'The database with uuid "invalid" does not exist.',
-        "instance": "https://byodb.net/api/v1/databases/invalid",
+        "instance": "https://byodb.net/api/databases/v1/invalid",
         "status": 404,
         "title": "Database not found",
         "type": "https://byodb.net/errors/RFC7807/database-not-found",
