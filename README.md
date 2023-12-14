@@ -38,5 +38,3 @@ https://stackoverflow.com/questions/10205744/opening-sqlite3-database-from-pytho
 https://developer.okta.com/docs/reference/api/oidc/#response-properties-10
 con = sqlite3.connect("file:tutorial.db?mode=ro", uri=True)
 https://quart.palletsprojects.com/en/latest/tutorials/api_tutorial.html
-
-

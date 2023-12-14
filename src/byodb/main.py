@@ -11,8 +11,7 @@ from quart import Quart
 from quart_schema import QuartSchema
 
 from byodb.blueprints.databases.v1 import api as databases_v1
-from byodb.blueprints.queries.v1 import api as queries_v1 
-
+from byodb.blueprints.queries.v1 import api as queries_v1
 
 quart_schema = QuartSchema()
 
@@ -43,7 +42,7 @@ async def init_db(app: Quart) -> None:
     Create tables.
     """
     async with aiosqlite.connect(app.config["DATABASE"]) as db:
-        with open(Path(app.root_path) / "schema.sql", mode="r") as file_:
+        with open(Path(app.root_path) / "schema.sql", encoding="utf-8") as file_:
             await db.executescript(file_.read())
         await db.commit()
 

@@ -11,8 +11,8 @@ import aiosqlite
 from quart import Blueprint, current_app, url_for
 from quart_schema import validate_request, validate_response
 
-from byodb.db import get_db
 from byodb.constants import DialectEnum
+from byodb.db import get_db
 from byodb.errors import ErrorHeaders, ErrorResponse, FullErrorResponse
 
 from .models import (
@@ -20,8 +20,8 @@ from .models import (
     DatabaseCreate,
     DatabaseDeletedResponse,
     DatabaseResponse,
-    DatabaseUpdate,
     DatabasesResponse,
+    DatabaseUpdate,
 )
 from .utils import get_database_not_found_error, get_database_size
 
@@ -77,7 +77,7 @@ async def create_database(data: DatabaseCreate) -> tuple[DatabaseResponse, int]:
                 created_at=created_at,
                 last_modified_at=last_modified_at,
                 size_in_bytes=0,
-            )
+            ),
         ),
         201,
     )
@@ -92,11 +92,12 @@ async def get_database(uuid: str) -> DatabaseResponse | FullErrorResponse:
     """
     async with get_db() as db:
         async with db.execute(
-            "SELECT * FROM database WHERE uuid = ?", (uuid,)
+            "SELECT * FROM database WHERE uuid = ?",
+            (uuid,),
         ) as cursor:
             row = await cursor.fetchone()
             return (
-                DatabasesResponse(result=Database.from_row(row))
+                DatabaseResponse(result=Database.from_row(row))
                 if row
                 else get_database_not_found_error(uuid)
             )
@@ -106,13 +107,17 @@ async def get_database(uuid: str) -> DatabaseResponse | FullErrorResponse:
 @validate_request(DatabaseUpdate)
 @validate_response(DatabaseResponse, 200)
 @validate_response(ErrorResponse, 404, ErrorHeaders)
-async def update_database(uuid: str, data: DatabaseUpdate) -> DatabaseResponse:
+async def update_database(
+    uuid: str,
+    data: DatabaseUpdate,
+) -> DatabaseResponse | FullErrorResponse:
     """
     Update an existing database.
     """
     async with get_db() as db:
         async with db.execute(
-            "SELECT * FROM database WHERE uuid = ?", (uuid,)
+            "SELECT * FROM database WHERE uuid = ?",
+            (uuid,),
         ) as cursor:
             row = await cursor.fetchone()
             if not row:
@@ -139,7 +144,7 @@ async def update_database(uuid: str, data: DatabaseUpdate) -> DatabaseResponse:
             created_at=datetime.fromisoformat(row["created_at"]),
             last_modified_at=last_modified_at,
             size_in_bytes=get_database_size(row["uuid"]),
-        )
+        ),
     )
 
 
