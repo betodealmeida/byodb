@@ -9,7 +9,7 @@ from pytest_mock import MockerFixture
 from quart import Quart
 
 
-async def test_get_databases(mocker: MockerFixture, app: Quart) -> None:
+async def test_get_databases(mocker: MockerFixture, current_app: Quart) -> None:
     """
     Test the `get_databases` endpoint.
     """
@@ -18,7 +18,7 @@ async def test_get_databases(mocker: MockerFixture, app: Quart) -> None:
         return_value=UUID("92cdeabd-8278-43ad-871d-0214dcb2d12e"),
     )
 
-    test_client = app.test_client()
+    test_client = current_app.test_client()
 
     response = await test_client.get("/api/databases/v1/")
     assert response.status_code == 200
@@ -48,12 +48,12 @@ async def test_get_databases(mocker: MockerFixture, app: Quart) -> None:
                 "name": "test_db",
                 "size_in_bytes": 0,
                 "uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
-            }
-        ]
+            },
+        ],
     }
 
 
-async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
+async def test_get_database(mocker: MockerFixture, current_app: Quart) -> None:
     """
     Test the `get_database` endpoint.
     """
@@ -62,7 +62,7 @@ async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
         return_value=UUID("92cdeabd-8278-43ad-871d-0214dcb2d12e"),
     )
 
-    test_client = app.test_client()
+    test_client = current_app.test_client()
 
     with freeze_time("2023-01-01"):
         await test_client.post(
@@ -75,7 +75,7 @@ async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
         )
 
     response = await test_client.get(
-        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e"
+        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e",
     )
     assert response.status_code == 200
     payload = await response.json
@@ -88,7 +88,7 @@ async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
             "name": "test_db",
             "size_in_bytes": 0,
             "uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
-        }
+        },
     }
 
     response = await test_client.get("/api/databases/v1/invalid")
@@ -103,7 +103,7 @@ async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
     }
 
 
-async def test_create_database(mocker: MockerFixture, app: Quart) -> None:
+async def test_create_database(mocker: MockerFixture, current_app: Quart) -> None:
     """
     Test the `create_databases` endpoint.
     """
@@ -112,7 +112,7 @@ async def test_create_database(mocker: MockerFixture, app: Quart) -> None:
         return_value=UUID("92cdeabd-8278-43ad-871d-0214dcb2d12e"),
     )
 
-    test_client = app.test_client()
+    test_client = current_app.test_client()
 
     with freeze_time("2023-01-01"):
         response = await test_client.post(
@@ -134,11 +134,11 @@ async def test_create_database(mocker: MockerFixture, app: Quart) -> None:
             "name": "test_db",
             "size_in_bytes": 0,
             "uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
-        }
+        },
     }
 
 
-async def test_delete_database(mocker: MockerFixture, app: Quart) -> None:
+async def test_delete_database(mocker: MockerFixture, current_app: Quart) -> None:
     """
     Test the `delete_database` endpoint.
     """
@@ -147,7 +147,7 @@ async def test_delete_database(mocker: MockerFixture, app: Quart) -> None:
         return_value=UUID("92cdeabd-8278-43ad-871d-0214dcb2d12e"),
     )
 
-    test_client = app.test_client()
+    test_client = current_app.test_client()
 
     with freeze_time("2023-01-01"):
         await test_client.post(
@@ -160,7 +160,7 @@ async def test_delete_database(mocker: MockerFixture, app: Quart) -> None:
         )
 
     response = await test_client.delete(
-        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e"
+        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e",
     )
     assert response.status_code == 204
     payload = await response.json
@@ -180,7 +180,7 @@ async def test_delete_database(mocker: MockerFixture, app: Quart) -> None:
 
 async def test_delete_database_multiple_primary_keys(
     mocker: MockerFixture,
-    app: Quart,
+    current_app: Quart,
 ) -> None:
     """
     Test the error message when multiple databases have the same UUID.
@@ -196,9 +196,9 @@ async def test_delete_database_multiple_primary_keys(
         return_value=connection,
     )
 
-    test_client = app.test_client()
+    test_client = current_app.test_client()
     response = await test_client.delete(
-        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e"
+        "/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e",
     )
     assert response.status_code == 500
     payload = await response.json
@@ -216,7 +216,7 @@ async def test_delete_database_multiple_primary_keys(
     }
 
 
-async def test_update_database(mocker: MockerFixture, app: Quart) -> None:
+async def test_update_database(mocker: MockerFixture, current_app: Quart) -> None:
     """
     Test the `update_database` endpoint.
     """
@@ -225,7 +225,7 @@ async def test_update_database(mocker: MockerFixture, app: Quart) -> None:
         return_value=UUID("92cdeabd-8278-43ad-871d-0214dcb2d12e"),
     )
 
-    test_client = app.test_client()
+    test_client = current_app.test_client()
 
     with freeze_time("2023-01-01"):
         await test_client.post(
@@ -253,7 +253,7 @@ async def test_update_database(mocker: MockerFixture, app: Quart) -> None:
             "name": "test",
             "size_in_bytes": 0,
             "uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
-        }
+        },
     }
 
     response = await test_client.patch(

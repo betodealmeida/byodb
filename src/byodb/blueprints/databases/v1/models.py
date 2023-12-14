@@ -29,6 +29,9 @@ class Database:
 
     @staticmethod
     def from_row(row: aiosqlite.Row) -> "Database":
+        """
+        Create a Database instance from a database row.
+        """
         return Database(
             uuid=UUID(row["uuid"]),
             dialect=DialectEnum(row["dialect"]),
@@ -68,14 +71,26 @@ class DatabaseUpdate:
 
 @dataclass
 class DatabasesResponse:
+    """
+    An API response containing a list of databases.
+    """
+
     result: list[Database]
 
 
 @dataclass
 class DatabaseResponse:
+    """
+    An API response for a database.
+    """
+
     result: Database
 
 
 @dataclass
 class DatabaseDeletedResponse:
+    """
+    An API response for a successful database deletion.
+    """
+
     result: str

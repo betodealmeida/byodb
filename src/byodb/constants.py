@@ -1,3 +1,7 @@
+"""
+Constants used by BYODB.
+"""
+
 from enum import StrEnum
 
 
@@ -15,4 +19,4 @@ class DialectEnum(StrEnum):
     applications because their BYODB instance doesn't support a specific database.
     """
 
-    sqlite = "sqlite"
+    SQLITE = "sqlite"

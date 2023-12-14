@@ -2,34 +2,37 @@
 Tests for the utils module.
 """
 
-from quart import Quart
+from uuid import uuid4
+
 from pytest_mock import MockerFixture
+from quart import Quart
 
 from byodb.blueprints.databases.v1.utils import (
-    get_database_size,
     get_database_not_found_error,
+    get_database_size,
 )
-from byodb.errors import ErrorResponse, ErrorHeaders
+from byodb.errors import ErrorHeaders, ErrorResponse
 
 
-async def test_get_database_size(mocker: MockerFixture, app: Quart) -> None:
+async def test_get_database_size(mocker: MockerFixture, current_app: Quart) -> None:
     """
     Test the `get_database_size` function.
     """
+    # pylint: disable=invalid-name, unnecessary-dunder-call
     Path = mocker.patch("byodb.blueprints.databases.v1.utils.Path")
     Path().__truediv__().stat().st_size = 1234
 
-    async with app.app_context():
-        result = get_database_size("some-uuid")
+    async with current_app.app_context():
+        result = get_database_size(uuid4())
 
     assert result == 1234
 
 
-async def test_get_database_not_found_error(app: Quart) -> None:
+async def test_get_database_not_found_error(current_app: Quart) -> None:
     """
     Test the `get_database_not_found_error` function.
     """
-    async with app.app_context():
+    async with current_app.app_context():
         response, status_code, headers = get_database_not_found_error("some-uuid")
 
     assert response == ErrorResponse(

@@ -48,4 +48,8 @@ class Query:
 
 @dataclass
 class QueryResponse:
+    """
+    An API response for a query.
+    """
+
     result: Query
