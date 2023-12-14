@@ -22,7 +22,7 @@ async def test_create_query(mocker: MockerFixture, app: Quart) -> None:
 
     with freeze_time("2023-01-01"):
         await test_client.post(
-            "/api/v1/databases/",
+            "/api/databases/v1/",
             json={
                 "dialect": "sqlite",
                 "name": "test_db",
@@ -32,7 +32,7 @@ async def test_create_query(mocker: MockerFixture, app: Quart) -> None:
 
     with freeze_time("2023-01-01"):
         response = await test_client.post(
-            "/api/v1/queries/",
+            "/api/queries/v1/",
             json={
                 "database_uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
                 "submitted_query": "SELECT 42",
@@ -62,7 +62,7 @@ async def test_create_query_invalid_database(app: Quart) -> None:
 
     with freeze_time("2023-01-01"):
         response = await test_client.post(
-            "/api/v1/queries/",
+            "/api/queries/v1/",
             json={
                 "database_uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
                 "submitted_query": "SELECT 42",
@@ -73,7 +73,7 @@ async def test_create_query_invalid_database(app: Quart) -> None:
     payload = await response.json
     assert payload == {
         "detail": 'The database with uuid "92cdeabd-8278-43ad-871d-0214dcb2d12e" does not exist.',
-        "instance": "https://byodb.net/api/v1/databases/92cdeabd-8278-43ad-871d-0214dcb2d12e",
+        "instance": "https://byodb.net/api/databases/v1/92cdeabd-8278-43ad-871d-0214dcb2d12e",
         "status": 422,
         "title": "Invalid database UUID",
         "type": "https://byodb.net/errors/RFC7807/invalid-database-uuid",

@@ -30,7 +30,7 @@ def get_database_not_found_error(uuid: str) -> FullErrorResponse:
             status=404,
             detail=f'The database with uuid "{uuid}" does not exist.',
             instance=url_for(
-                "v1/databases.get_database",
+                "databases/v1.get_database",
                 uuid=uuid,
                 _external=True,
                 _scheme="https",
