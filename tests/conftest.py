@@ -18,6 +18,9 @@ async def app(tmpdir) -> Quart:
     )
     await init_db(app)
 
+    if not tmpdir.join("storage").exists():
+        tmpdir.join("storage").mkdir()
+
     yield app
 
 

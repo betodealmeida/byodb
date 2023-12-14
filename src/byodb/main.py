@@ -11,6 +11,7 @@ from quart import Quart
 from quart_schema import QuartSchema
 
 from byodb.blueprints.databases.v1 import api as databases_v1
+from byodb.blueprints.queries.v1 import api as queries_v1 
 
 
 quart_schema = QuartSchema()
@@ -32,6 +33,7 @@ def create_app(test_config: dict[str, str] | None = None) -> Quart:
 
     # blueprints
     app.register_blueprint(databases_v1.blueprint)
+    app.register_blueprint(queries_v1.blueprint)
 
     return app
 

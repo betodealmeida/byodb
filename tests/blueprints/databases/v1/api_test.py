@@ -41,10 +41,10 @@ async def test_get_databases(mocker: MockerFixture, app: Quart) -> None:
     assert payload == {
         "result": [
             {
-                "created_at": "2023-01-01T00:00:00",
+                "created_at": "2023-01-01T00:00:00Z",
                 "description": "A simple database",
                 "dialect": "sqlite",
-                "last_modified_at": "2023-01-01T00:00:00",
+                "last_modified_at": "2023-01-01T00:00:00Z",
                 "name": "test_db",
                 "size_in_bytes": 0,
                 "uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
@@ -81,10 +81,10 @@ async def test_get_database(mocker: MockerFixture, app: Quart) -> None:
     payload = await response.json
     assert payload == {
         "result": {
-            "created_at": "2023-01-01T00:00:00",
+            "created_at": "2023-01-01T00:00:00Z",
             "description": "A simple database",
             "dialect": "sqlite",
-            "last_modified_at": "2023-01-01T00:00:00",
+            "last_modified_at": "2023-01-01T00:00:00Z",
             "name": "test_db",
             "size_in_bytes": 0,
             "uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
@@ -127,10 +127,10 @@ async def test_create_database(mocker: MockerFixture, app: Quart) -> None:
     payload = await response.json
     assert payload == {
         "result": {
-            "created_at": "2023-01-01T00:00:00",
+            "created_at": "2023-01-01T00:00:00Z",
             "description": "A simple database",
             "dialect": "sqlite",
-            "last_modified_at": "2023-01-01T00:00:00",
+            "last_modified_at": "2023-01-01T00:00:00Z",
             "name": "test_db",
             "size_in_bytes": 0,
             "uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
@@ -246,10 +246,10 @@ async def test_update_database(mocker: MockerFixture, app: Quart) -> None:
     payload = await response.json
     assert payload == {
         "result": {
-            "created_at": "2023-01-01T00:00:00",
+            "created_at": "2023-01-01T00:00:00Z",
             "description": "A simple database",
             "dialect": "sqlite",
-            "last_modified_at": "2023-01-02T00:00:00",
+            "last_modified_at": "2023-01-02T00:00:00Z",
             "name": "test",
             "size_in_bytes": 0,
             "uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",

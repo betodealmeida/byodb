@@ -4,7 +4,7 @@ Database blueprint.
 These endpoints are used for CRUD operations on databases.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 from uuid import uuid4
 
 import aiosqlite
@@ -49,7 +49,7 @@ async def create_database(data: DatabaseCreate) -> tuple[DatabaseResponse, int]:
     Create a new database.
     """
     uuid = data.uuid or uuid4()
-    created_at = last_modified_at = datetime.utcnow()
+    created_at = last_modified_at = datetime.now(timezone.utc)
 
     async with aiosqlite.connect(current_app.config["DATABASE"]) as db:
         await db.execute(
@@ -121,7 +121,7 @@ async def update_database(uuid: str, data: DatabaseUpdate) -> DatabaseResponse:
         # update fields
         name = data.name or row["name"]
         description = data.description or row["description"]
-        last_modified_at = datetime.utcnow()
+        last_modified_at = datetime.now(timezone.utc)
 
         async with db.execute(
             "UPDATE database SET name = ?, description = ?, last_modified_at = ? "
