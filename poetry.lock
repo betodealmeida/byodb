@@ -953,6 +953,23 @@ docs = ["pydata_sphinx_theme"]
 dotenv = ["python-dotenv"]
 
 [[package]]
+name = "quart-auth"
+version = "0.9.0"
+description = "A Quart extension to provide secure cookie authentication"
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "quart_auth-0.9.0-py3-none-any.whl", hash = "sha256:907c03329108ec62f7d8fbc9c987012333433c0205ffc310cbb6881a30366e5a"},
+    {file = "quart_auth-0.9.0.tar.gz", hash = "sha256:827485a934986054afac9f3cfba737cbab4deadaeb3b1b7cf6fbfc1963a15941"},
+]
+
+[package.dependencies]
+quart = ">=0.18"
+
+[package.extras]
+docs = ["pydata_sphinx_theme"]
+
+[[package]]
 name = "quart-schema"
 version = "0.18.0"
 description = "A Quart extension to provide schema validation"
@@ -1074,4 +1091,4 @@ h11 = ">=0.9.0,<1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.11"
-content-hash = "facfe3849cac06641b589a44fa8f9c39d573abac63ef19258d78c5b4691fd29b"
+content-hash = "bf79456988ac7250ad6c2ddf61593fd6296f7efb9eb71e29260223d03b24c33f"

@@ -20,6 +20,7 @@ async def app(tmpdir) -> Quart:
             "SERVER_NAME": "byodb.net",
         },
     )
+    test_app.secret_key = "secret key"
     await init_db(test_app)
 
     if not tmpdir.join("storage").exists():

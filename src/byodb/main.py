@@ -8,12 +8,14 @@ from pathlib import Path
 import aiosqlite
 from dotenv import dotenv_values
 from quart import Quart
+from quart_auth import QuartAuth
 from quart_schema import QuartSchema
 
 from byodb.blueprints.databases.v1 import api as databases_v1
 from byodb.blueprints.queries.v1 import api as queries_v1
 
 quart_schema = QuartSchema()
+quart_auth = QuartAuth()
 
 
 def create_app(test_config: dict[str, str] | None = None) -> Quart:
@@ -29,6 +31,7 @@ def create_app(test_config: dict[str, str] | None = None) -> Quart:
 
     # extensions
     quart_schema.init_app(app)
+    quart_auth.init_app(app)
 
     # blueprints
     app.register_blueprint(databases_v1.blueprint)

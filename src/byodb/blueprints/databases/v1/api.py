@@ -9,6 +9,7 @@ from uuid import uuid4
 
 import aiosqlite
 from quart import Blueprint, current_app, url_for
+from quart_auth import current_user, login_required
 from quart_schema import validate_request, validate_response
 
 from byodb.constants import DialectEnum
@@ -30,12 +31,16 @@ blueprint = Blueprint("databases/v1", __name__, url_prefix="/api/databases/v1")
 
 @blueprint.route("/", methods=["GET"])
 @validate_response(DatabasesResponse, 200)
+@login_required
 async def get_databases() -> DatabasesResponse:
     """
     List all databases.
     """
     async with get_db() as db:
-        async with db.execute("SELECT * FROM database") as cursor:
+        async with db.execute(
+            "SELECT * FROM database WHERE user_uuid = ?",
+            (current_user.auth_id,),
+        ) as cursor:
             rows = await cursor.fetchall()
 
     return DatabasesResponse(result=[Database.from_row(row) for row in rows])
@@ -44,6 +49,7 @@ async def get_databases() -> DatabasesResponse:
 @blueprint.route("/", methods=["POST"])
 @validate_request(DatabaseCreate)
 @validate_response(DatabaseResponse, 201)
+@login_required
 async def create_database(data: DatabaseCreate) -> tuple[DatabaseResponse, int]:
     """
     Create a new database.
@@ -54,10 +60,11 @@ async def create_database(data: DatabaseCreate) -> tuple[DatabaseResponse, int]:
     async with aiosqlite.connect(current_app.config["DATABASE"]) as db:
         await db.execute(
             "INSERT INTO database "
-            "(uuid, dialect, name, description, created_at, last_modified_at) "
-            "VALUES (?, ?, ?, ?, ?, ?)",
+            "(uuid, user_uuid, dialect, name, description, created_at, last_modified_at) "
+            "VALUES (?, ?, ?, ?, ?, ?, ?)",
             (
                 str(uuid),
+                current_user.auth_id,
                 data.dialect,
                 data.name,
                 data.description,
@@ -86,14 +93,15 @@ async def create_database(data: DatabaseCreate) -> tuple[DatabaseResponse, int]:
 @blueprint.route("/<uuid>", methods=["GET"])
 @validate_response(DatabaseResponse, 200)
 @validate_response(ErrorResponse, 404, ErrorHeaders)
+@login_required
 async def get_database(uuid: str) -> DatabaseResponse | FullErrorResponse:
     """
     Show a given database.
     """
     async with get_db() as db:
         async with db.execute(
-            "SELECT * FROM database WHERE uuid = ?",
-            (uuid,),
+            "SELECT * FROM database WHERE uuid = ? AND user_uuid = ?",
+            (uuid, current_user.auth_id),
         ) as cursor:
             row = await cursor.fetchone()
 
@@ -108,6 +116,7 @@ async def get_database(uuid: str) -> DatabaseResponse | FullErrorResponse:
 @validate_request(DatabaseUpdate)
 @validate_response(DatabaseResponse, 200)
 @validate_response(ErrorResponse, 404, ErrorHeaders)
+@login_required
 async def update_database(
     uuid: str,
     data: DatabaseUpdate,
@@ -117,8 +126,8 @@ async def update_database(
     """
     async with get_db() as db:
         async with db.execute(
-            "SELECT * FROM database WHERE uuid = ?",
-            (uuid,),
+            "SELECT * FROM database WHERE uuid = ? AND user_uuid = ?",
+            (uuid, current_user.auth_id),
         ) as cursor:
             row = await cursor.fetchone()
 
@@ -154,6 +163,7 @@ async def update_database(
 @validate_response(DatabaseDeletedResponse, 204)
 @validate_response(ErrorResponse, 404, ErrorHeaders)
 @validate_response(ErrorResponse, 500, ErrorHeaders)
+@login_required
 async def delete_database(
     uuid: str,
 ) -> tuple[DatabaseDeletedResponse, int] | FullErrorResponse:
@@ -162,8 +172,8 @@ async def delete_database(
     """
     async with aiosqlite.connect(current_app.config["DATABASE"]) as db:
         await db.execute(
-            "DELETE FROM database WHERE uuid = ?",
-            (uuid,),
+            "DELETE FROM database WHERE uuid = ? AND user_uuid = ?",
+            (uuid, current_user.auth_id),
         )
         await db.commit()
         affected_rows = db.total_changes

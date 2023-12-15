@@ -7,8 +7,10 @@ from uuid import UUID
 from freezegun import freeze_time
 from pytest_mock import MockerFixture
 from quart import Quart
+from quart_auth import authenticated_client
 
 
+@freeze_time("2023-01-01")
 async def test_create_query(mocker: MockerFixture, current_app: Quart) -> None:
     """
     Test the `create_query` endpoint.
@@ -20,7 +22,8 @@ async def test_create_query(mocker: MockerFixture, current_app: Quart) -> None:
 
     test_client = current_app.test_client()
 
-    with freeze_time("2023-01-01"):
+    auth_id = "48150b24-92e4-49d4-8c1a-8ca8ec394039"
+    async with authenticated_client(test_client, auth_id):
         await test_client.post(
             "/api/databases/v1/",
             json={
@@ -30,14 +33,13 @@ async def test_create_query(mocker: MockerFixture, current_app: Quart) -> None:
             },
         )
 
-    with freeze_time("2023-01-01"):
-        response = await test_client.post(
-            "/api/queries/v1/",
-            json={
-                "database_uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
-                "submitted_query": "SELECT 42",
-            },
-        )
+    response = await test_client.post(
+        "/api/queries/v1/",
+        json={
+            "database_uuid": "92cdeabd-8278-43ad-871d-0214dcb2d12e",
+            "submitted_query": "SELECT 42",
+        },
+    )
 
     assert response.status_code == 201
     payload = await response.json
