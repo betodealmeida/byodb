@@ -37,6 +37,7 @@ async def create_query(
             (uuid,),
         ) as cursor:
             row = await cursor.fetchone()
+
     if not row:
         return (
             ErrorResponse(
