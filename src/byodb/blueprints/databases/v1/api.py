@@ -96,11 +96,12 @@ async def get_database(uuid: str) -> DatabaseResponse | FullErrorResponse:
             (uuid,),
         ) as cursor:
             row = await cursor.fetchone()
-            return (
-                DatabaseResponse(result=Database.from_row(row))
-                if row
-                else get_database_not_found_error(uuid)
-            )
+
+    return (
+        DatabaseResponse(result=Database.from_row(row))
+        if row
+        else get_database_not_found_error(uuid)
+    )
 
 
 @blueprint.route("/<uuid>", methods=["PATCH"])
@@ -120,8 +121,9 @@ async def update_database(
             (uuid,),
         ) as cursor:
             row = await cursor.fetchone()
-            if not row:
-                return get_database_not_found_error(uuid)
+
+        if not row:
+            return get_database_not_found_error(uuid)
 
         # update fields
         name = data.name or row["name"]
