@@ -18,6 +18,9 @@ CREATE TABLE user (
     email TEXT NOT NULL UNIQUE,
     display_name TEXT NOT NULL,
     password TEXT NOT NULL,
+    is_active BOOLEAN DEFAULT FALSE,
+    is_admin BOOLEAN DEFAULT FALSE,
+    last_login_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_modified_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
